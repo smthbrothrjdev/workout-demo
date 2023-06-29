@@ -17,3 +17,92 @@ model TestImpl {
   subject String?
   message String
 }
+
+model Exercise {
+  id           Int        @id @default(autoincrement())
+  name         String     @unique
+  videoUrl     VideoUrl[]
+  step         Step[]
+  category     Category   @relation(fields: [categoryId], references: [id])
+  categoryId   Int
+  difficulty   Difficulty @relation(fields: [difficultyId], references: [id])
+  difficultyId Int
+  force        Force      @relation(fields: [forceId], references: [id])
+  forceId      Int
+  grips        String
+  target       Target     @relation(fields: [targetId], references: [id])
+  targetId     Int        @unique
+  youtubeUrl   String?
+
+  @@index([categoryId])
+  @@index([difficultyId])
+  @@index([forceId])
+}
+
+model VideoUrl {
+  id         Int      @id @default(autoincrement())
+  url        String   @unique
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  exerciseId Int
+
+  @@index([exerciseId])
+}
+
+model Step {
+  id         Int      @id @default(autoincrement())
+  step       String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  exerciseId Int
+
+  @@index([exerciseId])
+}
+
+model Category {
+  id        Int        @id @default(autoincrement())
+  name      String
+  exercises Exercise[]
+}
+
+model Difficulty {
+  id        Int        @id @default(autoincrement())
+  name      String
+  exercises Exercise[]
+}
+
+model Force {
+  id        Int        @id @default(autoincrement())
+  name      String
+  exercises Exercise[]
+}
+
+model Muscle {
+  id        Int               @id @default(autoincrement())
+  name      String
+  primary   PrimaryTarget[]
+  secondary SecondaryTarget[]
+}
+
+model PrimaryTarget {
+  id           Int      @id @default(autoincrement())
+  muscle       Muscle[]
+  targetGroups Target[]
+}
+
+model SecondaryTarget {
+  id           Int      @id @default(autoincrement())
+  muscle       Muscle[]
+  targetGroups Target[]
+}
+
+model Target {
+  id           Int              @id @default(autoincrement())
+  primary      PrimaryTarget    @relation(fields: [primaryId], references: [id])
+  secondary    SecondaryTarget? @relation(fields: [secondaryId], references: [id])
+  primaryId    Int
+  secondaryId  Int
+  exercise     Exercise?
+  exerciseName String
+
+  @@index([primaryId])
+  @@index([secondaryId])
+}
