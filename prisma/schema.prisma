@@ -33,6 +33,7 @@ model Exercise {
   target       Target     @relation(fields: [targetId], references: [id])
   targetId     Int        @unique
   youtubeUrl   String?
+  details      String
 
   @@index([categoryId])
   @@index([difficultyId])
@@ -59,19 +60,19 @@ model Step {
 
 model Category {
   id        Int        @id @default(autoincrement())
-  name      String
+  name      String     @unique
   exercises Exercise[]
 }
 
 model Difficulty {
   id        Int        @id @default(autoincrement())
-  name      String
+  name      String     @unique
   exercises Exercise[]
 }
 
 model Force {
   id        Int        @id @default(autoincrement())
-  name      String
+  name      String     @unique
   exercises Exercise[]
 }
 
